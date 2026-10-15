@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="A simple contact form for testing the Swaragh CRM form endpoint.">
+  <title>Contact us — Swaragh</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17221f;
+      --muted: #68736c;
+      --paper: #f5f4ef;
+      --card: #fffefa;
+      --line: #d9ddd5;
+      --green: #315d4a;
+      --green-dark: #244838;
+      --soft-green: #e8eee8;
+      --error: #a33f36;
+      --shadow: 0 24px 70px rgb(34 46 37 / 9%);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 82% 4%, rgb(215 224 210 / 48%), transparent 30rem),
+        var(--paper);
+    }
+    .page { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+    header {
+      height: 88px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgb(23 34 31 / 10%);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 11px; color: inherit; text-decoration: none; }
+    .brand-mark {
+      display: grid;
+      width: 35px;
+      height: 35px;
+      place-items: center;
+      border-radius: 11px;
+      color: #fff;
+      background: var(--green);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -.08em;
+    }
+    .brand-name { font-size: 15px; font-weight: 700; letter-spacing: -.035em; }
+    .header-note { color: var(--muted); font-size: 12px; letter-spacing: .04em; }
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, .92fr) minmax(420px, 1.08fr);
+      gap: clamp(46px, 9vw, 124px);
+      align-items: center;
+      padding: 90px 0 96px;
+    }
+    .intro { padding-bottom: 18px; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0 0 22px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 24px; height: 1px; background: currentColor; }
+    h1 {
+      max-width: 490px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(48px, 6vw, 74px);
+      font-weight: 400;
+      letter-spacing: -.065em;
+      line-height: .98;
+    }
+    .intro-copy {
+      max-width: 390px;
+      margin: 25px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .response-time {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-top: 44px;
+      color: #43524a;
+      font-size: 12px;
+    }
+    .response-icon {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgb(255 254 250 / 70%);
+      font-size: 14px;
+    }
+    .form-card {
+      padding: clamp(26px, 4vw, 44px);
+      border: 1px solid rgb(23 34 31 / 8%);
+      border-radius: 19px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .form-heading { margin-bottom: 30px; }
+    .form-heading h2 { margin: 0 0 8px; font-size: 20px; letter-spacing: -.04em; }
+    .form-heading p { margin: 0; color: var(--muted); font-size: 13px; }
+    .field { margin: 0 0 20px; }
+    label { display: block; margin: 0 0 8px; font-size: 12px; font-weight: 650; }
+    .optional { margin-left: 4px; color: #8a938d; font-size: 11px; font-weight: 400; }
+    input, textarea {
+      display: block;
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      outline: none;
+      color: var(--ink);
+      background: #fff;
+      font: inherit;
+      font-size: 14px;
+      transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+    input { height: 48px; }
+    textarea { min-height: 126px; resize: vertical; line-height: 1.55; }
+    input::placeholder, textarea::placeholder { color: #a2aaa3; }
+    input:focus, textarea:focus { border-color: #6e967d; box-shadow: 0 0 0 3px rgb(49 93 74 / 11%); }
+    .submit {
+      display: flex;
+      width: 100%;
+      min-height: 51px;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 6px;
+      border: 0;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--green);
+      cursor: pointer;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 650;
+      transition: background .16s ease, transform .16s ease;
+    }
+    .submit:hover:not(:disabled) { transform: translateY(-1px); background: var(--green-dark); }
+    .submit:focus-visible { outline: 3px solid rgb(49 93 74 / 28%); outline-offset: 3px; }
+    .submit:disabled { cursor: wait; opacity: .72; }
+    .arrow { font-size: 18px; line-height: 1; }
+    .status { min-height: 22px; margin: 14px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .status[data-state="success"] { color: var(--green); }
+    .status[data-state="error"] { color: var(--error); }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 0 28px;
+      border-top: 1px solid rgb(23 34 31 / 10%);
+      color: var(--muted);
+      font-size: 11px;
+    }
+    @media (max-width: 760px) {
+      .page { width: min(100% - 36px, 560px); }
+      header { height: 72px; }
+      .header-note { font-size: 11px; }
+      main { grid-template-columns: 1fr; gap: 32px; padding: 56px 0 62px; }
+      .intro { padding: 0; }
+      h1 { max-width: 420px; font-size: clamp(50px, 13vw, 68px); }
+      .intro-copy { margin-top: 18px; }
+      .response-time { display: none; }
+      .form-card { padding: 27px 22px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <a class="brand" href="#top" aria-label="Swaragh home">
+        <span class="brand-mark" aria-hidden="true">s.</span>
+        <span class="brand-name">Swaragh</span>
+      </a>
+      <span class="header-note">We’d love to hear from you</span>
+    </header>
+
+    <main id="top">
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">Get in touch</p>
+        <h1 id="page-title">Let’s start a conversation.</h1>
+        <p class="intro-copy">Have a question or an idea in mind? Send us a note and our team will be happy to help.</p>
+        <div class="response-time"><span class="response-icon" aria-hidden="true">↗</span><span>Share a few details and we’ll take it from here.</span></div>
+      </section>
+
+      <section class="form-card" aria-labelledby="form-title">
+        <div class="form-heading">
+          <h2 id="form-title">Contact us</h2>
+          <p>Fields marked with * are required.</p>
+        </div>
+        <form id="contact-form">
+          <div class="field">
+            <label for="contact_name">Full name <span aria-hidden="true">*</span></label>
+            <input id="contact_name" name="contact_name" type="text" placeholder="Your full name" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="email">Email address <span aria-hidden="true">*</span></label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+          </div>
+          <div class="field">
+            <label for="phone">Phone number <span class="optional">(optional)</span></label>
+            <input id="phone" name="phone" type="tel" placeholder="Your phone number" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="message">How can we help? <span aria-hidden="true">*</span></label>
+            <textarea id="message" name="message" placeholder="Tell us a little about what you need…" required></textarea>
+          </div>
+          <button class="submit" id="submit-button" type="submit"><span id="button-label">Send enquiry</span><span class="arrow" aria-hidden="true">↗</span></button>
+          <p class="status" id="form-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer><span>© <span id="year"></span> Swaragh</span><span>Contact form</span></footer>
+  </div>
+  <script>
+    const endpoint = "https://soft.swaragh.net/api/v1/forms/ffdbb6e5-fdb4-4b1d-aed0-a7dbfa6e4a9a/submit";
+    const form = document.querySelector("#contact-form");
+    const button = document.querySelector("#submit-button");
+    const buttonLabel = document.querySelector("#button-label");
+    const status = document.querySelector("#form-status");
+    document.querySelector("#year").textContent = new Date().getFullYear();
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+
+      const values = new FormData(form);
+      const payload = {
+        contact_name: String(values.get("contact_name")).trim(),
+        email: String(values.get("email")).trim(),
+        phone: String(values.get("phone")).trim(),
+        message: String(values.get("message")).trim()
+      };
+
+      button.disabled = true;
+      buttonLabel.textContent = "Sending…";
+      status.textContent = "";
+      status.removeAttribute("data-state");
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const body = await response.text();
+        if (!response.ok) {
+          throw new Error(body || `The server responded with status ${response.status}.`);
+        }
+        status.dataset.state = "success";
+        status.textContent = "Thanks — your enquiry was sent successfully.";
+        form.reset();
+      } catch (error) {
+        status.dataset.state = "error";
+        status.textContent = error instanceof TypeError
+          ? "We couldn’t reach the form service. Check your connection, or ask the site administrator to allow this page’s origin."
+          : `Your enquiry could not be sent. ${error.message}`;
+      } finally {
+        button.disabled = false;
+        buttonLabel.textContent = "Send enquiry";
+      }
+    });
+  </script>
+</body>
+</html>
